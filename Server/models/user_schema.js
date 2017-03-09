@@ -1,3 +1,14 @@
+/*
+user_schema.js
+
+Written by: Jiawei Wu of ECE492 group 5
+Date: 03/04/2017
+
+Defines the user schema to allow storage 
+into the mongodb database
+
+Also salts the passwords so no plain-text is stored
+*/
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt");
 

@@ -1,3 +1,19 @@
+/*
+generateJSON.c
+
+Written by: Jiawei Wu of ECE492 group 5
+Date: 02/03/2017
+
+Native C file that generates the JSON file and saves it to disk,
+allowing the server to access said files. 
+
+At the moment, this file simply generates random values.
+Once the sensors have been set up, it will use the sensor
+value and output it into a JSON format.
+
+New files are generated every second, file creation
+is atomic and thread safe.
+*/
 #include <json/json.h>
 #include <stdio.h>
 #include <time.h>
@@ -52,6 +68,8 @@ int main() {
 
 		json_object *j_sensor_1_current_int = json_object_new_int(sensor_1_data);
 		json_object *j_sensor_2_current_int = json_object_new_int(sensor_2_data);
+		json_object *j_sensor_1_unit = json_object_new_string("Amp");
+		json_object *j_sensor_2_unit = json_object_new_string("Amp");
 		json_object *j_date_string = json_object_new_string(date_buffer);
 		
 		json_object_object_add(j_sensor_1_obj, "Sensor_ID" , j_sensor_1_ID_int);
@@ -60,6 +78,8 @@ int main() {
 		json_object_object_add(j_sensor_2_obj, "Current" , j_sensor_2_current_int);
 		json_object_object_add(j_sensor_1_obj, "Date" , j_date_string);
 		json_object_object_add(j_sensor_2_obj, "Date" , j_date_string);
+		json_object_object_add(j_sensor_1_obj, "Unit" , j_sensor_1_unit);
+		json_object_object_add(j_sensor_2_obj, "Unit" , j_sensor_2_unit);
 
 		fp_sensor_1 = fopen("./sensors/sensor_1~.json", "w");
 		if (fp_sensor_1 == NULL) {

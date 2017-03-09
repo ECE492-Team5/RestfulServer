@@ -1,5 +1,6 @@
 {
   "Sensor_ID":2,
-  "Current":1,
-  "Date":"2017-03-08T03:29:47"
+  "Current":6,
+  "Date":"2017-03-08T22:28:23",
+  "Unit":"Amp"
 }
