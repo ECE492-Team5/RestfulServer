@@ -1,33 +1,21 @@
 #RESTful Server Implementation
 
 
-Written by Jiawei Wu of Group 5 
+Written by Jiawei Wu of Group 5
 
 
-This server is written in javascript on top of Node.js
+This server is written in javascript on top of Node.js using the express.js framework. Sensor data generate is done using native C code for better performance when ran using the ARM processor SoC. 
 
-
-using the express.js framework.
-
-
-Sensor data generate is done using native C code 
-
-
-for better performance when ran using the 
-
-
-ARM processor SoC. 
 
 Database uses MongoDB, Authentication and security uses passport and 
-JSON Web Tokens
+JSON Web Tokens. Unit testing done using Mocha, Chai, and Supertest libraries.
 
-Unit testing done using Mocha, Chai, and Supertest libraries
 
-Main files of interest:
-app.js : Main server file
-server_unit_test.js and user_unit_test.js : Unit tests
+##Main files of interest:
+###app.js : Main server file
+###server_unit_test.js and user_unit_test.js : Unit tests
 
-Folder Directory:
+###Folder Directory:
 ```
 Server
 |-- models
