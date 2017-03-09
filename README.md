@@ -19,7 +19,7 @@ server_unit_test.js and user_unit_test.js : Unit tests
 
 Folder Directory:
 ```
-|Server
+Server
 |-- models
 |---- sensor_schema.js
 |---- user_schema.js
