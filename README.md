@@ -18,7 +18,7 @@ app.js : Main server file
 server_unit_test.js and user_unit_test.js : Unit tests
 
 Folder Directory:
-
+```
 |Server
 |-- models
 |---- sensor_schema.js
@@ -43,4 +43,4 @@ Folder Directory:
 |-- package.json
 LICENSE
 README.md
-
+```
