@@ -57,7 +57,24 @@ describe("Testing Server", function() {
 				done();
 			});
 	});
+	
+	//Try accessing restricted page
+	it("Accessing Restricted URI", function(done) {
+		supertest(app)
+			.get("/sensor_1")
+			.expect(404)
+			.end(function(err, response) {
+				if (err) {
+					done(err);
+				}
+				response.body.should.be.a("object");
+				response.body.should.have.property("status");
+				response.body.should.have.property("message");
+				response.body.status.should.equal("dataError");
+				done();
+			});
 
+	});
 	//Try registering new account
 	it("Registering New Account", function(done) {
 		var user = {username: "test_user",
