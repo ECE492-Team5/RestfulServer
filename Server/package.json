@@ -1,5 +1,5 @@
 {
-  "name": "Demo-Server",
+  "name": "ECE492Group5Server",
   "private": true,
   "scripts": {
     "start": "node app.js",

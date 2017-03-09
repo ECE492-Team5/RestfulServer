@@ -135,15 +135,27 @@ app.get("/delete_users", function(request, response) {
 //Store Sensor value
 app.get("/add", passport.authenticate("jwt", config.session), function(request, response) {
 	var newSensorData;
-	if (typeof sensor1JSON != "undefined") {
-		newSensorData = new Sensor({
+	if (typeof sensor1JSON != "undefined" && typeof sensor2JSON != "undefined") {
+		newSensor1Data = new Sensor({
 			Sensor_ID: sensor1JSON.Sensor_ID,
 			Current: sensor1JSON.Current,
 			Date: new Date(sensor1JSON.Date),
 			Unit: sensor1JSON.Unit
 		});
+
+		newSensor2Data = new Sensor({
+			Sensor_ID: sensor2JSON.Sensor_ID,
+			Current: sensor2JSON.Current,
+			Date: new Date(sensor2JSON.Date),
+			Unit: sensor2JSON.Unit
+		});
 		
-		newSensorData.save(function(err) {
+		newSensorData1.save(function(err) {
+			if (err) {
+				throw err;
+			}
+		});
+		newSensorData2.save(function(err) {
 			if (err) {
 				throw err;
 			}
@@ -210,7 +222,7 @@ app.post("/signin", function(request, response) {
 
 //Middleware for failed authentication attempts
 app.get("/failed", function(request, response) {
-	response.send({status: "AuthFailed", message: "Please Authenticate First"});
+	response.status(404).send({status: "AuthFailed", message: "Please Authenticate First"});
 });
 
 //Middleware for other errors
