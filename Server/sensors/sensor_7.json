@@ -1,6 +1,6 @@
 {
-  "Sensor_ID":1,
+  "Sensor_ID":7,
   "Current":0.733333,
   "Date":"2017-03-14T02:22:38",
-  "Unit":"V"
+  "Unit":"A"
 }

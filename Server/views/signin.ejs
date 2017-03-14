@@ -1,0 +1,38 @@
+<% include header %>
+<div class="container-fluid text-center main-div">
+	<h1>Server Demo<h1>
+</div>
+
+<div class="container-fluid text-center sign-in">
+	<div class="row">
+		<div class="col-sm-12 signin-div">
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-user">
+					</i>
+				</span>
+				<input id="username" type="test" class="form-control" name="username" placeholder="Username">
+			</div>
+			<div class="input-group">
+				<span class="input-group-addon">
+					<i class="glyphicon glyphicon-lock">
+					</i>
+				</span>
+				<input id="password" type="password" class="form-control" name="password" placeholder="Password">
+			</div>
+			<button type="button" class="btn btn-default btn-lg signin-button">
+				Sign In
+			</button>
+			<button type="button" class="btn btn-default btn-lg signup-button">
+				Create New Account
+			</button>
+			<div class="alert alert-danger signin-error">
+			</div>
+			<div class="alert alert-success signup-success">
+				<strong>Success!</strong> You May Sign In Now
+			</div>
+		</div>
+	</div>
+</div>
+<script src="/public/js/signin.js" charset="utf-8"></script>
+<% include footer %>

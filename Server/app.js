@@ -18,7 +18,7 @@ var express  	= require("express");
 var app 	 	= express();
 var path 	 	= require("path");
 var morgan 	 	= require("morgan");
-var fs			= require("fs");
+var fs			= require("./sensorReader");
 var bodyParser	= require("body-parser");
 var spawn 	 	= require("child_process").spawn;
 
@@ -38,8 +38,6 @@ var generateJSON;
 
 //Sensor file path and variables
 var sensorPath = path.resolve(__dirname, "sensors");
-var sensor1JSON;
-var sensor2JSON;
 
 //Port to listen on
 var port = process.env.port || 3000;
@@ -51,7 +49,8 @@ app.use(passport.initialize());
 passport_I(passport);
 
 //Static files
-app.use(express.static(path.resolve(__dirname, "public")));
+app.use('/public', express.static(path.join(__dirname + '/public')));
+
 //Initialize Morgan, used for logging
 app.use(morgan("combined"));
 
@@ -65,35 +64,51 @@ app.use(bodyParser.json());
 
 //Main page, responds with index.html and 200 HTTP status code
 app.get("/", function(request, response) {
-	response.status(200).render("index");
+	response.status(200).render("signin");
 });
 
-//Gets value for first sensor, requires authorization
-app.get("/sensor_1", passport.authenticate("jwt", config.session), function(request, response) {
-	if (typeof sensor1JSON != "undefined") {
-		response.status(200).json(sensor1JSON);
+app.get("/index/:username/:token", function(request, response) {
+	var name = request.params.username;
+	console.log("USERNAME: " + name);
+	var token = request.params.token;
+	User.findOne({username: name}, function(err, entry) {
+ 		if (err) {
+ 			throw err;
+ 		}
+ 		if (!entry) {
+ 			response.status(404).send({status: "AuthFailed", message: "User Not Found"});
+ 		} else {
+ 			var tempToken = entry.password;
+ 			if (tempToken.replace(/[^a-zA-Z ]/g, "") === token) {
+ 				response.status(200).render("index");
+ 			}
+ 		}
+ 	});
+});
+
+app.get("/sensor_:sensorID", passport.authenticate("jwt", config.session), function(request, response) {
+	var sensorID = request.params.sensorID;
+	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
+		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});
+		return;
+	}
+	var sensorJSON = fs.returnSensor(sensorID);
+	if (typeof sensorJSON != "undefined") {
+		response.status(200).json(sensorJSON);
 	} 
 	else {
 		response.status(404).send({status: "dataError", message: "Sensor 1: No File Found"});
 	}
-	
-});
-
-//Gets value for second sensor, requires authorization
-app.get("/sensor_2", passport.authenticate("jwt", config.session), function(request, response) {
-
-	if (typeof sensor2JSON != "undefined") {
-		response.status(200).json(sensor2JSON);
-	} 
-	else {
-		response.status(404).send({status: "dataError", message: "Sensor 2: No File Found"});
-	}
 });
 
 //Gets value for all stored first sensor, requires authorization
-app.get("/get_all_sensor_1", passport.authenticate("jwt", config.session),  function(request, response) {
-
- 	Sensor.find({ Sensor_ID: 1 }, function(err, entry) {
+app.get("/get_sensor_:sensorID" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
+	var sensorID = request.params.sensorID;
+	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
+		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});
+		return;
+	}
+ 	Sensor.find({ Sensor_ID: sensorID }, function(err, entry) {
  		if (err) {
  			throw err;
  		}
@@ -101,10 +116,8 @@ app.get("/get_all_sensor_1", passport.authenticate("jwt", config.session),  func
  	});
 });
 
-//Gets value for all stored second sensor, requires authorization
-app.get("/get_all_sensor_2", passport.authenticate("jwt", config.session), function(request, response) {
-
- 	Sensor.find({ Sensor_ID: 2 }, function(err, entry) {
+app.get("/get_all_sensors" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
+ 	Sensor.find({}, function(err, entry) {
  		if (err) {
  			throw err;
  		}
@@ -113,7 +126,7 @@ app.get("/get_all_sensor_2", passport.authenticate("jwt", config.session), funct
 });
 
 //Deletes all stored sensor data, used for testing
-app.get("/delete_sensor", function(request, response) {
+app.get("/delete_sensors", function(request, response) {
 	Sensor.remove({}, function(err) {
 		if (err) {
 			console.log(err);
@@ -132,34 +145,39 @@ app.get("/delete_users", function(request, response) {
 	});
 });
 
-//Store Sensor value
-app.get("/add", passport.authenticate("jwt", config.session), function(request, response) {
-	var newSensorData;
-	if (typeof sensor1JSON != "undefined" && typeof sensor2JSON != "undefined") {
-		newSensor1Data = new Sensor({
-			Sensor_ID: sensor1JSON.Sensor_ID,
-			Current: sensor1JSON.Current,
-			Date: new Date(sensor1JSON.Date),
-			Unit: sensor1JSON.Unit
-		});
+app.get("/get_users", function(request, response) {
+	User.find({}, function(err, entry) {
+ 		if (err) {
+ 			throw err;
+ 			console.log(err);
+ 		}
+ 		response.status(200).send(entry);
+ 	});
+});
 
-		newSensor2Data = new Sensor({
-			Sensor_ID: sensor2JSON.Sensor_ID,
-			Current: sensor2JSON.Current,
-			Date: new Date(sensor2JSON.Date),
-			Unit: sensor2JSON.Unit
+//Store Sensor value
+app.get("/add_:sensorID"/*,passport.authenticate("jwt", config.session)*/, function(request, response) {
+	var sensorID = request.params.sensorID;
+	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
+		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});
+		return;
+	}
+	var sensorJSON = fs.returnSensor(sensorID);
+	var newSensorData;
+	if (typeof sensorJSON != "undefined") {
+		newSensorData = new Sensor({
+			Sensor_ID: sensorJSON.Sensor_ID,
+			Current: sensorJSON.Current,
+			Date: new Date(sensorJSON.Date),
+			Unit: sensorJSON.Unit
 		});
 		
-		newSensorData1.save(function(err) {
+		newSensorData.save(function(err) {
 			if (err) {
 				throw err;
 			}
 		});
-		newSensorData2.save(function(err) {
-			if (err) {
-				throw err;
-			}
-		});
+
 		response.status(200).send({status: "dataSaved", message: "Data Saved To Database"});
 	}
 	else {
@@ -176,7 +194,7 @@ app.post("/signup", function(request, response) {
 				throw err;
 			}
 			if (entry.length) {
-				response.status(404).send({status: "UsernameError", message: "Username Already Exist"});
+				response.status(404).send({status: "UserCreateError", message: "Username Already Exist"});
 			}
 			else {
 				var newUser = new User({
@@ -200,6 +218,7 @@ app.post("/signup", function(request, response) {
 //POST signing in and authentication, body must include username and password
 //Returns token
 app.post("/signin", function(request, response) {
+	var tempToken;
 	User.findOne({ username : request.body.username }, function(err, user) {
 		if (err) {
 			throw err;
@@ -211,7 +230,9 @@ app.post("/signin", function(request, response) {
 			user.checkPassword(request.body.password, function(err, isMatch) {
 				if (isMatch) {
 					var token = jwt.sign(user, config.secret, {expiresIn: "5h"});
-					response.json({status: "TokenGranted", message: "JWT " + token});
+					tempToken = user.password;
+					response.json({status: "TokenGranted", message: "JWT " + token, tempToken: tempToken.replace(/[^a-zA-Z ]/g, "")});
+			
 				} else {
 					response.json({status: "AuthFailed", message: "Authentication Failed: Incorrected Password"});
 				}
@@ -234,25 +255,50 @@ app.use(function(request, response) {
 //Atomic IO, thread safe
 app.listen(port, function() {
 	console.log("App started on port 3000");
-	generateJSON = spawn(cmd);
+	//generateJSON = spawn(cmd);
 
 	setInterval(function() {
-		fs.readFile(sensorPath + "/sensor_1.json", "utf8", function (err, data) {
-			if (err) {
-				throw err;
-			}
-			sensor1JSON = JSON.parse(data);
-		});
+		fs.read(sensorPath + "/sensor_1.json", "utf8", 1)
 	}, 1000);
 
 	setInterval(function() {
-		fs.readFile(sensorPath + "/sensor_2.json", "utf8", function (err, data) {
-			if (err) {
-				throw err;
-			}
-			sensor2JSON = JSON.parse(data);
-		});
+		fs.read(sensorPath + "/sensor_2.json", "utf8", 2)
 	}, 1000);
+
+	setInterval(function() {
+		fs.read(sensorPath + "/sensor_3.json", "utf8", 3)
+	}, 1000);
+
+	setInterval(function() {
+		fs.read(sensorPath + "/sensor_4.json", "utf8", 4)
+	}, 1000);
+
+	setInterval(function() {
+		fs.read(sensorPath + "/sensor_5.json", "utf8", 5)
+	}, 1000);
+
+	setInterval(function() {
+		fs.read(sensorPath + "/sensor_6.json", "utf8", 6)
+	}, 1000);
+
+	setInterval(function() {
+		fs.read(sensorPath + "/sensor_7.json", "utf8", 7)
+	}, 1000);
+
+	setInterval(function() {
+		fs.read(sensorPath + "/sensor_8.json", "utf8", 8)
+	}, 1000);
+
+	
+
+	// setInterval(function() {
+	// 	fs.readFile(sensorPath + "/sensor_2.json", "utf8", function (err, data) {
+	// 		if (err) {
+	// 			throw err;
+	// 		}
+	// 		sensor2JSON = JSON.parse(data);
+	// 	});
+	// }, 1000);
 });
 
 //Exports app for testing
