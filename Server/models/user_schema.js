@@ -10,7 +10,7 @@ into the mongodb database
 Also salts the passwords so no plain-text is stored
 */
 var mongoose = require("mongoose");
-var bcrypt = require("bcrypt");
+var bcrypt = require("bcryptjs");
 
 var SALT_FACTOR = 10;
 var Schema = mongoose.Schema;
