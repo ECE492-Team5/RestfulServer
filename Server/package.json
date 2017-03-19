@@ -15,11 +15,5 @@
     "morgan": "^1.8.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1"
-  },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "*",
-    "nodemon": "^1.11.0",
-    "supertest": "^3.0.0"
   }
 }

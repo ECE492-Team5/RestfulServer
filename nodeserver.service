@@ -1,0 +1,14 @@
+[Unit]
+Description=NodeJS Restful Server for ECE 492 Team 5
+
+[Service]
+ExecStart=/usr/bin/node /home/nodeserver/RestfulServer/Server/app.js
+Restart=always
+User=nodeserver
+Group=nodeserver
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/home/nodeserver/RestfulServer/Server
+
+[Install]
+WantedBy=multi-user.target

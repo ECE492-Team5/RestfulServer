@@ -253,7 +253,7 @@ app.use(function(request, response) {
 
 //Starts the server and native C program
 //Atomic IO, thread safe
-app.listen(port, function() {
+app.listen(port,"10.10.0.100", function() {
 	console.log("App started on port 3000");
 	//generateJSON = spawn(cmd);
 
