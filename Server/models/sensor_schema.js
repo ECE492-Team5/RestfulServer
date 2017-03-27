@@ -15,6 +15,7 @@ var sensorSchema = new Schema({
 	Sensor_ID: { type: String, required: true },
 	Current: { type: Number, required: true },
 	Date: { type: Date, required: true},
+	DateCreated: { type: Date, default: Date.now},
 	Unit: { type: String, required: true}
 });
 

@@ -86,7 +86,7 @@ app.get("/index/:username/:token", function(request, response) {
  	});
 });
 
-app.get("/sensor_:sensorID", passport.authenticate("jwt", config.session), function(request, response) {
+app.get("/sensor_:sensorID", /*passport.authenticate("jwt", config.session),*/ function(request, response) {
 	var sensorID = request.params.sensorID;
 	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
 		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});

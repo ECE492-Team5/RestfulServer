@@ -1,4 +1,5 @@
 var fs = require("fs");
+var Sensor= require("./models/sensor_schema");
 
 var sensorJSON1;
 var sensorJSON2;
@@ -15,14 +16,31 @@ var read = function(path, format, ID) {
 			console.log("Error Reading File Path: " + path);
 			throw err;
 		}
-		eval("sensorJSON" + ID + " = JSON.parse(data)");
+		var tempSensorJSON = JSON.parse(data);
+		eval("sensorJSON" + ID + " = tempSensorJSON;");
+
+		var newSensorData = new Sensor({
+			Sensor_ID: tempSensorJSON.Sensor_ID,
+			Current: tempSensorJSON.Current,
+			Date: new Date(tempSensorJSON.Date),
+			Unit: tempSensorJSON.Unit
+		});
+
+		newSensorData.save(function(err) {
+			if (err) {
+				console.log("Failed to save sensor data for ID: " + ID);
+				throw err;
+			}
+		});
 	});
-};
+}
 
 var returnSensor = function(ID) {
 	var sensorJSON = eval("sensorJSON" + ID);
 	return sensorJSON;
 }
+
+
 
 module.exports = {
 	read: read,
