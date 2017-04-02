@@ -95,7 +95,7 @@ $(function() {
 				$sensor_1_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_1_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1000)*100) + "%"
 				});
   			}
 		});
@@ -116,7 +116,7 @@ $(function() {
 				$sensor_2_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_2_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1200)*100) + "%"
 				});
   			}
 		});
@@ -137,7 +137,7 @@ $(function() {
 				$sensor_3_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_3_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1200)*100) + "%"
 				});
   			}
 		});
@@ -158,7 +158,7 @@ $(function() {
 				$sensor_4_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_4_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1600)*100) + "%"
 				});
   			}
 		});
@@ -179,7 +179,7 @@ $(function() {
 				$sensor_5_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_5_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1500)*100) + "%"
 				});
   			}
 		});
@@ -200,7 +200,7 @@ $(function() {
 				$sensor_6_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_6_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1500)*100) + "%"
 				});
   			}
 		});
@@ -221,7 +221,7 @@ $(function() {
 				$sensor_7_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_7_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1500)*100) + "%"
 				});
   			}
 		});
@@ -242,7 +242,7 @@ $(function() {
 				$sensor_8_date.text("Time Stamp: " + data.Date).fadeTo(100, 1);
 	
 				$sensor_8_bar.css({
-					"width": Math.round((data.Current/15)*100) + "%"
+					"width": Math.round((data.Current/1500)*100) + "%"
 				});
   			}
 		});
