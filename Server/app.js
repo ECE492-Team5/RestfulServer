@@ -37,7 +37,7 @@ var cmd = "./generateJSON.o";
 var generateJSON;
 
 //Sensor file path and variables
-var sensorPath = path.resolve(__dirname, "sensors");
+var sensorPath = path.resolve(__dirname, "/var/tmp/sensor-json");
 
 //Port to listen on
 var port = process.env.port || 3000;
