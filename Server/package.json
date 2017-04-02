@@ -17,9 +17,9 @@
     "passport-jwt": "^2.2.1"
   },
   "devDependencies": {
--    "chai": "^3.5.0",
--    "mocha": "*",
--    "nodemon": "^1.11.0",
--    "supertest": "^3.0.0"
-   }
+    "chai": "^3.5.0",
+    "mocha": "*",
+    "nodemon": "^1.11.0",
+    "supertest": "^3.0.0"
+  }
 }

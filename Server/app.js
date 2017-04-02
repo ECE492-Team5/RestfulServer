@@ -21,6 +21,8 @@ var morgan 	 	= require("morgan");
 var fs			= require("./sensorReader");
 var bodyParser	= require("body-parser");
 var spawn 	 	= require("child_process").spawn;
+var https       = require("https");
+var filesystem  = require("fs");
 
 var mongoose 	= require("mongoose");
 
@@ -30,6 +32,14 @@ var config   	= require("./config");
 var passport 	= require("passport");
 var jwt      	= require("jsonwebtoken");
 var passport_I  = require("./passport");
+
+var pollingPeriod = 1000; 
+
+//HTTPS options
+var options = {
+	key : filesystem.readFileSync("key.pem"),
+	cert : filesystem.readFileSync("cert.pem")
+};
 
 //Command for running native C code to handle 
 //generation of sensor data
@@ -41,6 +51,7 @@ var sensorPath = path.resolve(__dirname, "sensors");
 
 //Port to listen on
 var port = process.env.port || 3000;
+
 //Connect to Mongodb database
 mongoose.connect("mongodb://localhost:27017/test");
 
@@ -253,52 +264,79 @@ app.use(function(request, response) {
 
 //Starts the server and native C program
 //Atomic IO, thread safe
-app.listen(port,"10.10.0.100", function() {
+// app.listen(port/*,"10.10.0.100"*/, function() {
+// 	console.log("App started on port 3000");
+// 	//generateJSON = spawn(cmd);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_1.json", "utf8", 1)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_2.json", "utf8", 2)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_3.json", "utf8", 3)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_4.json", "utf8", 4)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_5.json", "utf8", 5)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_6.json", "utf8", 6)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_7.json", "utf8", 7)
+// 	}, pollingPeriod);
+
+// 	setInterval(function() {
+// 		fs.read(sensorPath + "/sensor_8.json", "utf8", 8)
+// 	}, pollingPeriod);
+
+// });
+
+https.createServer(options, app).listen(3000, function() {
 	console.log("App started on port 3000");
 	//generateJSON = spawn(cmd);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_1.json", "utf8", 1)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_2.json", "utf8", 2)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_3.json", "utf8", 3)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_4.json", "utf8", 4)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_5.json", "utf8", 5)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_6.json", "utf8", 6)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_7.json", "utf8", 7)
-	}, 1000);
+	}, pollingPeriod);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_8.json", "utf8", 8)
-	}, 1000);
-
-	
-
-	// setInterval(function() {
-	// 	fs.readFile(sensorPath + "/sensor_2.json", "utf8", function (err, data) {
-	// 		if (err) {
-	// 			throw err;
-	// 		}
-	// 		sensor2JSON = JSON.parse(data);
-	// 	});
-	// }, 1000);
+	}, pollingPeriod);
 });
 
 //Exports app for testing
