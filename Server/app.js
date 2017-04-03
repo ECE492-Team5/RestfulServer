@@ -32,7 +32,7 @@ var config   	= require("./config");
 var passport 	= require("passport");
 var jwt      	= require("jsonwebtoken");
 var passport_I  = require("./passport");
-
+var http	= require("http");
 var pollingPeriod = 1000; 
 
 //HTTPS options
@@ -302,7 +302,9 @@ app.use(function(request, response) {
 
 // });
 
-https.createServer(options, app).listen(3000, function() {
+http.createServer(app).listen(3000);
+
+https.createServer(options, app).listen(8080, function() {
 	console.log("App started on port 3000");
 	//generateJSON = spawn(cmd);
 
