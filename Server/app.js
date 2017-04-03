@@ -22,6 +22,7 @@ var fs			= require("./sensorReader");
 var bodyParser	= require("body-parser");
 var spawn 	 	= require("child_process").spawn;
 var https       = require("https");
+var http        = require("http");
 var filesystem  = require("fs");
 
 var mongoose 	= require("mongoose");
@@ -301,8 +302,9 @@ app.use(function(request, response) {
 // 	}, pollingPeriod);
 
 // });
+http.createServer(app).listen(3000);
 
-https.createServer(options, app).listen(3000, function() {
+https.createServer(options, app).listen(8080, function() {
 	console.log("App started on port 3000");
 	//generateJSON = spawn(cmd);
 
