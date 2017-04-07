@@ -114,18 +114,44 @@ app.get("/sensor_:sensorID", /*passport.authenticate("jwt", config.session),*/ f
 });
 
 //Gets value for all stored first sensor, requires authorization
-app.get("/get_sensor_:sensorID" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
+app.get("/get_sensor_:sensorID/" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
 	var sensorID = request.params.sensorID;
+	var msStart = request.query.start;
+	var msEnd = request.query.end;
+
 	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
 		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});
 		return;
 	}
- 	Sensor.find({ Sensor_ID: sensorID }, function(err, entry) {
- 		if (err) {
- 			throw err;
- 		}
- 		response.status(200).send(entry);
- 	});
+
+	if ((!isNaN(msStart)) && (!isNaN(msEnd))) {
+		var startDate = new Date(msStart*1000).toISOString();
+		var endDate = new Date(msEnd*1000).toISOString();
+		
+		Sensor.find({ Sensor_ID: sensorID, DateCreated: {$gte: startDate, $lt: endDate}}, function(err, entry) {
+	 		if (err) {
+	 			throw err;
+	 		}
+	 		response.status(200).send(entry);
+	 	});	
+	}
+	else if ((!isNaN(msStart)) && (isNaN(msEnd))) {
+		var startDate = new Date(msStart*1000).toISOString();
+		Sensor.find({ Sensor_ID: sensorID, DateCreated: {$gte: startDate}}, function(err, entry) {
+	 		if (err) {
+	 			throw err;
+	 		}
+	 		response.status(200).send(entry);
+	 	});	
+	}
+	else {
+		Sensor.find({Sensor_ID: sensorID}, function(err, entry) {
+	 		if (err) {
+	 			throw err;
+	 		}
+	 		response.status(200).send(entry);
+	 	});	
+	}
 });
 
 app.get("/get_all_sensors" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
@@ -306,7 +332,7 @@ http.createServer(app).listen(3000);
 
 https.createServer(options, app).listen(8080, function() {
 	console.log("App started on port 3000");
-	//generateJSON = spawn(cmd);
+	// generateJSON = spawn(cmd);
 
 	setInterval(function() {
 		fs.read(sensorPath + "/sensor_1.json", "utf8", 1)
