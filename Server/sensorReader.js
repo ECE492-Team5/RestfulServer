@@ -1,3 +1,10 @@
+/*
+app.js
+Written by: Jiawei Wu of ECE492 group 5
+Date: 03/08/2017
+
+Helper file for various sensor operations
+*/
 var fs = require("fs");
 var Sensor= require("./models/sensor_schema");
 
