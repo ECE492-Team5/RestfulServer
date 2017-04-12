@@ -1,5 +1,5 @@
-#RESTful Server Implementation
-
+RESTful Server Implementation
+=============================
 
 By Group 5 of ECE492 W2017
 
@@ -11,13 +11,14 @@ Database uses MongoDB, Authentication and security uses passport and
 JSON Web Tokens. Unit testing done using Mocha, Chai, and Supertest libraries.
 
 
-##Main files of interest:
+Main files of interest:
+-----------------------
+* app.js : Main server file
 
-###app.js : Main server file
+* server_unit_test.js and user_unit_test.js : Unit tests
 
-###server_unit_test.js and user_unit_test.js : Unit tests
-
-###Folder Directory:
+Folder Directory:
+-----------------
 ```
 Server
 |-- models
