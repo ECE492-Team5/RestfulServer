@@ -12,7 +12,9 @@ JSON Web Tokens. Unit testing done using Mocha, Chai, and Supertest libraries.
 
 
 ##Main files of interest:
+
 ###app.js : Main server file
+
 ###server_unit_test.js and user_unit_test.js : Unit tests
 
 ###Folder Directory:
