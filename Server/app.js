@@ -9,6 +9,9 @@ to serve sensor and user information.
 
 Also uses Passport and JSON Web Tokens for 
 authentication.
+
+HTTPS is used for both API and frontend AJAX requests
+Also supports HTTP (Mainly as a debug mode)
 */
 
 /********************************
@@ -79,6 +82,7 @@ app.get("/", function(request, response) {
 	response.status(200).render("signin");
 });
 
+//User authentication
 app.get("/index/:username/:token", function(request, response) {
 	var name = request.params.username;
 	console.log("USERNAME: " + name);
@@ -98,7 +102,8 @@ app.get("/index/:username/:token", function(request, response) {
  	});
 });
 
-app.get("/sensor_:sensorID", /*passport.authenticate("jwt", config.session),*/ function(request, response) {
+//Get current sensor value from live readings, requires authorization
+app.get("/sensor_:sensorID", passport.authenticate("jwt", config.session), function(request, response) {
 	var sensorID = request.params.sensorID;
 	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
 		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});
@@ -114,7 +119,8 @@ app.get("/sensor_:sensorID", /*passport.authenticate("jwt", config.session),*/ f
 });
 
 //Gets value for all stored first sensor, requires authorization
-app.get("/get_sensor_:sensorID/" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
+//Also supports time stamps (in EPOCH time)
+app.get("/get_sensor_:sensorID/", passport.authenticate("jwt", config.session)*,  function(request, response) {
 	var sensorID = request.params.sensorID;
 	var msStart = request.query.start;
 	var msEnd = request.query.end;
@@ -154,6 +160,7 @@ app.get("/get_sensor_:sensorID/" /*,passport.authenticate("jwt", config.session)
 	}
 });
 
+//Back door debugging URI for getting all sensor values, used for testing
 app.get("/get_all_sensors" /*,passport.authenticate("jwt", config.session)*/,  function(request, response) {
  	Sensor.find({}, function(err, entry) {
  		if (err) {
@@ -163,7 +170,7 @@ app.get("/get_all_sensors" /*,passport.authenticate("jwt", config.session)*/,  f
  	});
 });
 
-//Deletes all stored sensor data, used for testing
+//Back door debugging URI for deleting all stored sensor data, used for testing
 app.get("/delete_sensors", function(request, response) {
 	Sensor.remove({}, function(err) {
 		if (err) {
@@ -173,7 +180,7 @@ app.get("/delete_sensors", function(request, response) {
 	});
 });
 
-//Deletes all stored user data, used for testing
+//Back door debugging URI for deleting all stored user data, used for testing
 app.get("/delete_users", function(request, response) {
 	User.remove({}, function(err) {
 		if (err) {
@@ -183,6 +190,7 @@ app.get("/delete_users", function(request, response) {
 	});
 });
 
+//Back door debugging URI for getting all stored user data, used for testing
 app.get("/get_users", function(request, response) {
 	User.find({}, function(err, entry) {
  		if (err) {
@@ -193,8 +201,8 @@ app.get("/get_users", function(request, response) {
  	});
 });
 
-//Store Sensor value
-app.get("/add_:sensorID"/*,passport.authenticate("jwt", config.session)*/, function(request, response) {
+//Store Sensor value, requires authorization
+app.get("/add_:sensorID", passport.authenticate("jwt", config.session), function(request, response) {
 	var sensorID = request.params.sensorID;
 	if ((sensorID < 1 || sensorID > 8) || isNaN(sensorID)) {
 		response.status(404).send({status: "inputError", message: "Please Enter An ID Between 1 and 8"});
@@ -328,8 +336,10 @@ app.use(function(request, response) {
 // 	}, pollingPeriod);
 
 // });
-http.createServer(app).listen(3000);
 
+//Creates HTTP listener
+http.createServer(app).listen(3000);
+//Creates HTTPS listener and starts sensor polling
 https.createServer(options, app).listen(8080, function() {
 	console.log("App started on port 3000");
 	// generateJSON = spawn(cmd);
