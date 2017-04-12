@@ -15,6 +15,8 @@ Main files of interest:
 -----------------------
 * app.js : Main server file
 
+* public and views: Front end website
+
 * server_unit_test.js and user_unit_test.js : Unit tests
 
 Folder Directory:
@@ -25,10 +27,19 @@ Server
 |---- sensor_schema.js
 |---- user_schema.js
 |-- public
-|---- main.js
+|---- css
+|---- fonts
+|---- js
+|------main.js
 |-- sensors
 |---- sensor_1.json
 |---- sensor_2.json
+|---- sensor_3.json
+|---- sensor_4.json
+|---- sensor_5.json
+|---- sensor_6.json
+|---- sensor_7.json
+|---- sensor_8.json
 |-- test
 |---- server_unit_test.js
 |---- user_unit_test.js
@@ -37,11 +48,16 @@ Server
 |---- footer.ejs
 |---- header.ejs
 |---- index.ejs
+|---- signin.ejs
 |-- app.js
+|-- cert.pem
 |-- config.js
 |-- generateJSON.c
+|-- generateJSON.o
+|-- key.pem
 |-- passport.js
 |-- package.json
+|-- sensorReader.js
 LICENSE
 README.md
 ```
