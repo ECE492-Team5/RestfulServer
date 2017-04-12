@@ -1,7 +1,7 @@
 /*
 app.js
 
-Written by: Jiawei Wu of ECE492 group 5
+Written by: ECE492 group 5
 Date: 03/08/2017
 
 Main Server File, uses the Express.js framework and 
